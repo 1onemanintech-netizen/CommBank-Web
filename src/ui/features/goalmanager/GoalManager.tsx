@@ -18,11 +18,17 @@ export function GoalManager(props: Props) {
 
   const goal = useAppSelector(selectGoalsMap)[props.goal.id]
 
+export function GoalManager(props: Props) {
+  const dispatch = useAppDispatch()
+  const goal = useAppSelector(selectGoalsMap)[props.goal.id]
+
   const [name, setName] = useState<string | null>(null)
   const [targetDate, setTargetDate] = useState<Date | null>(null)
   const [targetAmount, setTargetAmount] = useState<number | null>(null)
+  const [icon, setIcon] = useState<string | null>(null)
 
   useEffect(() => {
+    setIcon(goal?.icon ?? null)
     setName(props.goal.name)
     setTargetDate(props.goal.targetDate)
     setTargetAmount(props.goal.targetAmount)
@@ -31,18 +37,16 @@ export function GoalManager(props: Props) {
     props.goal.name,
     props.goal.targetDate,
     props.goal.targetAmount,
+    goal?.icon,
   ])
-
-  useEffect(() => {
-    setName(goal.name)
-  }, [goal.name])
-
+  
   const updateNameOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const nextName = event.target.value
     setName(nextName)
     const updatedGoal: Goal = {
       ...props.goal,
       name: nextName,
+      icon: icon ?? undefined,
     }
     dispatch(updateGoalRedux(updatedGoal))
     updateGoalApi(props.goal.id, updatedGoal)
@@ -56,6 +60,11 @@ export function GoalManager(props: Props) {
       name: name ?? props.goal.name,
       targetDate: targetDate ?? props.goal.targetDate,
       targetAmount: nextTargetAmount,
+      icon: icon ?? undefined,
+    }
+    dispatch(updateGoalRedux(updatedGoal))
+    updateGoalApi(props.goal.id, updatedGoal)
+  }
     }
     dispatch(updateGoalRedux(updatedGoal))
     updateGoalApi(props.goal.id, updatedGoal)
