@@ -13,10 +13,6 @@ import DatePicker from '../../components/DatePicker'
 import { Theme } from '../../components/Theme'
 
 type Props = { goal: Goal }
-export function GoalManager(props: Props) {
-  const dispatch = useAppDispatch()
-
-  const goal = useAppSelector(selectGoalsMap)[props.goal.id]
 
 export function GoalManager(props: Props) {
   const dispatch = useAppDispatch()
@@ -39,7 +35,7 @@ export function GoalManager(props: Props) {
     props.goal.targetAmount,
     goal?.icon,
   ])
-  
+
   const updateNameOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const nextName = event.target.value
     setName(nextName)
@@ -65,10 +61,6 @@ export function GoalManager(props: Props) {
     dispatch(updateGoalRedux(updatedGoal))
     updateGoalApi(props.goal.id, updatedGoal)
   }
-    }
-    dispatch(updateGoalRedux(updatedGoal))
-    updateGoalApi(props.goal.id, updatedGoal)
-  }
 
   const pickDateOnChange = (date: MaterialUiPickersDate) => {
     if (date != null) {
@@ -78,6 +70,7 @@ export function GoalManager(props: Props) {
         name: name ?? props.goal.name,
         targetDate: date ?? props.goal.targetDate,
         targetAmount: targetAmount ?? props.goal.targetAmount,
+        icon: icon ?? undefined,
       }
       dispatch(updateGoalRedux(updatedGoal))
       updateGoalApi(props.goal.id, updatedGoal)
@@ -87,28 +80,24 @@ export function GoalManager(props: Props) {
   return (
     <GoalManagerContainer>
       <NameInput value={name ?? ''} onChange={updateNameOnChange} />
-
       <Group>
         <Field name="Target Date" icon={faCalendarAlt} />
         <Value>
           <DatePicker value={targetDate} onChange={pickDateOnChange} />
         </Value>
       </Group>
-
       <Group>
         <Field name="Target Amount" icon={faDollarSign} />
         <Value>
           <StringInput value={targetAmount ?? ''} onChange={updateTargetAmountOnChange} />
         </Value>
       </Group>
-
       <Group>
         <Field name="Balance" icon={faDollarSign} />
         <Value>
           <StringValue>{props.goal.balance}</StringValue>
         </Value>
       </Group>
-
       <Group>
         <Field name="Date Created" icon={faCalendarAlt} />
         <Value>
@@ -148,6 +137,7 @@ const Group = styled.div`
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
 `
+
 const NameInput = styled.input`
   display: flex;
   background-color: transparent;
@@ -164,6 +154,7 @@ const FieldName = styled.h1`
   color: rgba(174, 174, 174, 1);
   font-weight: normal;
 `
+
 const FieldContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -174,10 +165,12 @@ const FieldContainer = styled.div`
     color: rgba(174, 174, 174, 1);
   }
 `
+
 const StringValue = styled.h1`
   font-size: 1.8rem;
   font-weight: bold;
 `
+
 const StringInput = styled.input`
   display: flex;
   background-color: transparent;
